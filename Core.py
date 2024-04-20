@@ -10,18 +10,18 @@ import pytesseract
 
 process=''
 image_name = input("What is the name of your image?")
-image_file = (f"ImagesIn/{image_name}.png")
+image_file = (f"ImagesIn/{image_name}")
 temp_file = f'temp/{process}.jpg'
 # Manipulating images with PIL
 im = Image.open(image_file)
 template = im.copy()
-width, height = template.size
-pixels = template.load()
-for i in range(width):
-    for j in range(height):
-        r, g, b, p= template.getpixel((i,j))
-        grayscale = (0.299*r + 0.587*g + 0.114*b)
-        pixels[i, j] = (int(grayscale), int(grayscale), int(grayscale))
+#width, height = template.size
+#pixels = template.load()
+#for i in range(width):
+#    for j in range(height):
+#        r, g, b, p= template.getpixel((i,j))
+#        grayscale = (0.299*r + 0.587*g + 0.114*b)
+#        pixels[i, j] = (int(grayscale), int(grayscale), int(grayscale))
 # Manipulating images with OpenCV
 img = cv2.imread(image_file)
 cv2.imshow("original image", img)
@@ -37,7 +37,7 @@ def invert(img):
     cv2.imshow("Inverted Image", temp)
     cv2.waitKey(0)
     return img
-Qinput = input('Would you like to invert your image? y/n')
+Qinput = input('Would you like to invert your image? y/n ')
 if Qinput == 'y':
     invert(img)
 else:
@@ -53,7 +53,7 @@ def binarize(image):
     cv2.imshow("Grayscale Image", temp)
     cv2.waitKey(0)
     return img
-Qgray = input('Would you like to binarize your image? y/n')
+Qgray = input('Would you like to binarize your image? y/n ')
 if Qgray == 'y':
     binarize(img)
 
@@ -67,22 +67,24 @@ def xnoise(image):
     cv2.imshow("Xnoise Image", temp)
     cv2.waitKey(0)
     return img
-Qnoise = input("Would you like to remove noise from your image? y/n...")
+Qnoise = input("Would you like to remove noise from your image? y/n ")
 if Qnoise == 'y':
     xnoise(img)
+    binarize(img)
 
 #Put the modified image through Pytesseract to OCR it!
 QOCR = input("Would you like to OCR your image? y/n ")
 if QOCR == 'y':
     ocr_result = pytesseract.image_to_string(img)
-    text_file = open(f'OCR_Text\{image_name}.txt', 'w')
-    text_file.write(ocr_result)
+    
     print(ocr_result)
+    QLike = input("Did you like the result? y/n ")
+    if QLike == 'y':
+        text_file = open(f'OCR_Text\{image_name}.txt', 'w')
+        text_file.write(ocr_result)
     pass
 
-QLike = ("Did you like the result? y/n ")
-if QLike == 'y':
-    text_file = open(f'OCR_Text\{image_name}.txt')
+
 #template.save('ImagesOut/AlteredImage.png')
 #result = Image.open("ImagesOut/AlteredEmail.png")
 #result.show()
