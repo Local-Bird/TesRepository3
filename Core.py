@@ -9,7 +9,8 @@ import pytesseract
     # Deliver the modified image to pytesseract to turn the image into plain text
 
 process=''
-image_file = "ImagesIn/GajaLakshmi.png"
+image_name = input("What is the name of your image?")
+image_file = (f"ImagesIn/{image_name}.png")
 temp_file = f'temp/{process}.jpg'
 # Manipulating images with PIL
 im = Image.open(image_file)
@@ -18,7 +19,7 @@ width, height = template.size
 pixels = template.load()
 for i in range(width):
     for j in range(height):
-        r, g, b, p = template.getpixel((i,j))
+        r, g, b, p= template.getpixel((i,j))
         grayscale = (0.299*r + 0.587*g + 0.114*b)
         pixels[i, j] = (int(grayscale), int(grayscale), int(grayscale))
 # Manipulating images with OpenCV
@@ -29,30 +30,59 @@ cv2.waitKey(0)
 # Inverting images with OpenCV
 def invert(img):
     process = "invert"
-    temp_file = f'temp/{process}.jpg'
     inverted_image = cv2.bitwise_not(img)
     cv2.imwrite(f'temp/{process}.jpg', inverted_image)
+    temp_file = f'temp/{process}.jpg'
     temp = cv2.imread(temp_file)
     cv2.imshow("Inverted Image", temp)
     cv2.waitKey(0)
-    return
+    return img
 Qinput = input('Would you like to invert your image? y/n')
 if Qinput == 'y':
     invert(img)
-
-# Grayscale images with OpenCV
-def grayscale(image):
-    process = "grayscale"
+else:
+    pass
+# Binarize images with OpenCV
+def binarize(image):
+    process = "binarize"
+    binarize_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    binarize_image = cv2.adaptiveThreshold(binarize_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+    cv2.imwrite("temp/binarize.jpg", binarize_image)
     temp_file = f'temp/{process}.jpg'
-    grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite("temp/grayscale.jpg", grayscale_image)
     temp = cv2.imread(temp_file)
     cv2.imshow("Grayscale Image", temp)
     cv2.waitKey(0)
-    return
-Qgray = input('Would you like to grayscale your image? y/n')
+    return img
+Qgray = input('Would you like to binarize your image? y/n')
 if Qgray == 'y':
-    grayscale(img)
+    binarize(img)
+
+# Remove noise from images with OpenCV
+def xnoise(image):
+    process = "xnoise"
+    xnoise_image = cv2.fastNlMeansDenoising(image, 7, 21)
+    cv2.imwrite("temp/xnoise.jpg", xnoise_image)
+    temp_file = f'temp/{process}.jpg'
+    temp = cv2.imread(temp_file)
+    cv2.imshow("Xnoise Image", temp)
+    cv2.waitKey(0)
+    return img
+Qnoise = input("Would you like to remove noise from your image? y/n...")
+if Qnoise == 'y':
+    xnoise(img)
+
+#Put the modified image through Pytesseract to OCR it!
+QOCR = input("Would you like to OCR your image? y/n ")
+if QOCR == 'y':
+    ocr_result = pytesseract.image_to_string(img)
+    text_file = open(f'OCR_Text\{image_name}.txt', 'w')
+    text_file.write(ocr_result)
+    print(ocr_result)
+    pass
+
+QLike = ("Did you like the result? y/n ")
+if QLike == 'y':
+    text_file = open(f'OCR_Text\{image_name}.txt')
 #template.save('ImagesOut/AlteredImage.png')
 #result = Image.open("ImagesOut/AlteredEmail.png")
 #result.show()
