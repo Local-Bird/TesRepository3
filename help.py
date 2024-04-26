@@ -1,2 +1,2 @@
 scream = 'DID IT WORK?'
-print(scream)
+print(scream[0:4])
