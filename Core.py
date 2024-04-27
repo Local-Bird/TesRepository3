@@ -25,8 +25,6 @@ def invert(img):
 def binarize(img):
     process = "binarize"
     binarize_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    #binarize_image = cv2.adaptiveThreshold(binarize_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
-    #thresh, binarize_image = cv2.threshold(binarize_image, 210, 230, cv2.THRESH_BINARY)
     blur = cv2.GaussianBlur(binarize_image,(5,5),0)
     thresh,binarize_image = cv2.threshold(binarize_image,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
@@ -55,20 +53,6 @@ def xnoise(img):
     temp = cv2.imread(temp_file)
     
     return (img)
-
-
-
-# Manipulating images with PIL
-#im = Image.open(image_file)
-#template = im.copy()
-#width, height = template.size
-#pixels = template.load()
-#for i in range(width):
-#    for j in range(height):
-#        r, g, b, p= template.getpixel((i,j))
-#        grayscale = (0.299*r + 0.587*g + 0.114*b)
-#        pixels[i, j] = (int(grayscale), int(grayscale), int(grayscale))
-# Manipulating images with OpenCV
 
 def main():
     process=''
@@ -117,6 +101,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    #template.save('ImagesOut/AlteredImage.png')
-    #result = Image.open("ImagesOut/AlteredEmail.png")
-    #result.show()
