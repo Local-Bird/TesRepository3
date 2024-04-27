@@ -1,4 +1,8 @@
 # TesRepository3
+## Setup
+This repository uses four total libraries: PIL, OpenCV (called as cv2), Pytesseract, and numpy. Make sure each has been pip installed to the local environment before calling them.
+This code also relies on an executable file named Tesseract: this is what will conduct the OCR for our programs. Install this file from (https://guides.library.illinois.edu/c.php?g=347520&p=4121425), selecting the one that is appropriate for your operating system. Follow the installation steps, then conclude by adding the location of Tesseract to your PATH.
+
 ## Core.py
 This is the file from which we derive all of the essential preprocessing and OCR functions. 
 
